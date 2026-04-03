@@ -5,13 +5,14 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  // Prisma v7 with prisma+postgres:// URL requires accelerateUrl
-  const url = process.env.DATABASE_URL ?? "";
-  if (url.startsWith("prisma+postgres://")) {
-    return new PrismaClient({ accelerateUrl: url });
+  const url = process.env.DATABASE_URL;
+
+  if (!url) {
+    throw new Error("DATABASE_URL environment variable is not set");
   }
-  // For direct PostgreSQL URLs (e.g., Neon in production)
-  // You'll need to install @prisma/adapter-pg and pass an adapter here
+
+  // Prisma v7 uses accelerateUrl for all connection types
+  // (both prisma+postgres:// dev URLs and Prisma Accelerate production URLs)
   return new PrismaClient({ accelerateUrl: url });
 }
 

@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 interface SidebarItem {
@@ -59,7 +60,7 @@ function getRoleLabel(pathname: string): string {
   return "Patient Portal";
 }
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const links = getLinksByRole(pathname ?? "");
   const roleLabel = getRoleLabel(pathname ?? "");
@@ -67,7 +68,7 @@ export function Sidebar() {
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-6">
+      <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600">
             <span className="text-sm font-bold text-white">DS</span>
@@ -76,6 +77,18 @@ export function Sidebar() {
             Doctor<span className="text-emerald-600">Sewa</span>
           </span>
         </Link>
+        {/* Close button for mobile */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:hidden"
+            aria-label="Close sidebar"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Role Label */}
@@ -99,6 +112,7 @@ export function Sidebar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={onClose}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
@@ -115,7 +129,10 @@ export function Sidebar() {
 
       {/* Bottom section */}
       <div className="border-t border-gray-200 p-4">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900">
+        <button
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
+        >
           <span className="text-base">🚪</span>
           Sign out
         </button>

@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
-import type { Role } from "@/app/generated/prisma/client";
+
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error("NEXTAUTH_SECRET environment variable is not set");
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
@@ -55,18 +58,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = (user as unknown as { role: Role }).role;
+        token.id = user.id!;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        (session.user as unknown as { role: Role }).role = token.role as Role;
+        session.user.role = token.role as import("@/app/generated/prisma/client").Role;
       }
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET ?? "doctorsewa-v2-dev-secret-change-in-production",
+  secret: process.env.NEXTAUTH_SECRET,
 });

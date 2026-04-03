@@ -1,11 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 // ─────────────────────────────────────────────
 // Classname utility (Tailwind merge helper)
 // ─────────────────────────────────────────────
 
 export function cn(...inputs: ClassValue[]) {
-  return clsx(inputs);
+  return twMerge(clsx(inputs));
 }
 
 // ─────────────────────────────────────────────

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 
 interface DashboardLayoutProps {
@@ -8,6 +8,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar — hidden on mobile, visible on desktop */}
@@ -15,11 +17,25 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <Sidebar />
       </div>
 
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 z-50 lg:hidden">
+            <Sidebar onClose={() => setSidebarOpen(false)} />
+          </div>
+        </>
+      )}
+
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         {/* Mobile Header (visible on small screens only) */}
         <div className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-gray-200 bg-white px-4 lg:hidden">
           <button
+            onClick={() => setSidebarOpen(true)}
             className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
             aria-label="Open menu"
           >

@@ -67,6 +67,7 @@ model User {
   appointments   Appointment[]
   notifications  Notification[]
   messages       Message[]
+  reviews        Review[]
 
   @@index([email])
   @@index([role])
@@ -240,12 +241,16 @@ model Review {
   id        String        @id @default(cuid())
   doctorId  String
   doctor    DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patientId String
+  patient   User          @relation(fields: [patientId], references: [id], onDelete: Cascade)
   rating    Int // 1-5
   comment   String?
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
+  @@unique([doctorId, patientId])
   @@index([doctorId])
+  @@index([patientId])
   @@index([rating])
 }
 

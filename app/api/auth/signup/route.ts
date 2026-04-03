@@ -1,16 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { isValidEmail } from "@/lib/utils";
+
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 255;
+const MAX_PHONE_LENGTH = 20;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, password, role } = body;
+    const name = (body.name ?? "").trim();
+    const email = (body.email ?? "").trim().toLowerCase();
+    const phone = (body.phone ?? "").trim();
+    const password = body.password ?? "";
+    const role = body.role ?? "";
 
     // ── Validation ──────────────────────────────────────
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Name, email, and password are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Please enter a valid email address" },
+        { status: 400 }
+      );
+    }
+
+    if (name.length > MAX_NAME_LENGTH) {
+      return NextResponse.json(
+        { error: `Name must be ${MAX_NAME_LENGTH} characters or fewer` },
+        { status: 400 }
+      );
+    }
+
+    if (email.length > MAX_EMAIL_LENGTH) {
+      return NextResponse.json(
+        { error: "Email address is too long" },
+        { status: 400 }
+      );
+    }
+
+    if (phone && phone.length > MAX_PHONE_LENGTH) {
+      return NextResponse.json(
+        { error: "Phone number is too long" },
         { status: 400 }
       );
     }

@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { auth } from "@/lib/auth";
 import { DashboardLayout } from "@/components/shared/DashboardLayout";
 import { Card, CardTitle } from "@/components/ui/Card";
 
@@ -6,13 +9,19 @@ export const metadata: Metadata = {
   title: "Patient Dashboard",
 };
 
-export default function PatientDashboard() {
+export default async function PatientDashboard() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/auth/login");
+  }
+
   return (
     <DashboardLayout>
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back 👋
+          Welcome back, {session.user.name?.split(" ")[0]} 👋
         </h1>
         <p className="mt-1 text-sm text-gray-500">
           Here&apos;s an overview of your health activity
@@ -52,7 +61,7 @@ export default function PatientDashboard() {
               { label: "My Appointments", icon: "📅", href: "/patient/appointments" },
               { label: "My Prescriptions", icon: "📋", href: "/patient/prescriptions" },
             ].map((action) => (
-              <a
+              <Link
                 key={action.label}
                 href={action.href}
                 className="flex flex-col items-center gap-2 rounded-xl border border-gray-200 p-4 text-center transition-colors hover:bg-gray-50"
@@ -61,7 +70,7 @@ export default function PatientDashboard() {
                 <span className="text-xs font-medium text-gray-700">
                   {action.label}
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         </Card>
