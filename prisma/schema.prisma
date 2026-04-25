@@ -35,6 +35,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum TokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 enum NotificationType {
   APPOINTMENT_CONFIRMED
   APPOINTMENT_REMINDER
@@ -52,13 +57,14 @@ enum NotificationType {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  password     String? // null for OAuth users
-  name         String
-  phone        String?
-  role         Role     @default(PATIENT)
-  profileImage String?
-  bio          String?
-  createdAt    DateTime @default(now())
+  password      String? // null for OAuth users
+  name          String
+  phone         String?
+  role          Role     @default(PATIENT)
+  profileImage  String?
+  bio           String?
+  emailVerified DateTime?
+  createdAt     DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   // Relations
@@ -270,4 +276,20 @@ model Prescription {
 
   @@index([appointmentId])
   @@index([doctorId])
+}
+
+// ─────────────────────────────────────────────
+// VERIFICATION TOKENS
+// ─────────────────────────────────────────────
+
+model VerificationToken {
+  id        String    @id @default(cuid())
+  email     String
+  token     String    @unique
+  type      TokenType
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([email])
+  @@index([token])
 }

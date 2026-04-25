@@ -1,34 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Alert } from "@/components/ui/Alert";
+import { animations } from "@/lib/animations";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
+  const verified = searchParams.get("verified");
+  const reset = searchParams.get("reset");
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shakeFields, setShakeFields] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // Fade in form on mount
+  useEffect(() => {
+    if (formRef.current) {
+      animations.fadeIn(formRef.current);
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError(null);
+    setShakeFields(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setShakeFields(false);
     setIsLoading(true);
 
     try {
@@ -39,7 +53,14 @@ export function LoginForm() {
       });
 
       if (result?.error) {
+        // Check for unverified email error
+        if (result.error.includes("UNVERIFIED_EMAIL") || result.code === "UNVERIFIED_EMAIL") {
+          router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}`);
+          return;
+        }
         setError("Invalid email or password");
+        setShakeFields(true);
+        setTimeout(() => setShakeFields(false), 400);
         return;
       }
 
@@ -59,16 +80,30 @@ export function LoginForm() {
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
+      setShakeFields(true);
+      setTimeout(() => setShakeFields(false), 400);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-5" style={{ opacity: 0 }}>
       {registered && (
         <Alert variant="success">
-          Account created successfully! Please log in.
+          Account created successfully! Please verify your email and log in.
+        </Alert>
+      )}
+
+      {verified && (
+        <Alert variant="success">
+          Email verified successfully! You can now log in.
+        </Alert>
+      )}
+
+      {reset && (
+        <Alert variant="success">
+          Password reset successfully! Log in with your new password.
         </Alert>
       )}
 
@@ -85,6 +120,8 @@ export function LoginForm() {
         placeholder="arbin@example.com"
         value={formData.email}
         onChange={handleChange}
+        variant={error ? "error" : "default"}
+        shake={shakeFields}
         required
       />
 
@@ -95,6 +132,9 @@ export function LoginForm() {
         placeholder="Enter your password"
         value={formData.password}
         onChange={handleChange}
+        variant={error ? "error" : "default"}
+        shake={shakeFields}
+        showPasswordToggle
         required
       />
 
@@ -114,7 +154,7 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <Button type="submit" className="w-full" size="lg" isLoading={isLoading}>
+      <Button type="submit" className="w-full" size="lg" loading={isLoading}>
         Log in
       </Button>
 

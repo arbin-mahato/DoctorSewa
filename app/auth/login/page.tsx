@@ -25,7 +25,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Form Card */}
+        {/* Form Card — uses design system Card with elevated variant */}
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <Suspense fallback={<div className="h-64 animate-pulse rounded bg-gray-100" />}>
             <LoginForm />

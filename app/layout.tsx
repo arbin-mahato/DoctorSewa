@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Navbar } from "@/components/shared/Navbar";
+import { PageTransition } from "@/components/shared/PageTransition";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <SessionProvider>
           <Navbar />
-          {children}
+          <PageTransition>{children}</PageTransition>
         </SessionProvider>
       </body>
     </html>
