@@ -1,0 +1,145 @@
+/* ─────────────────────────────────────────────
+   DoctorSewa v2 — Button Component Styles
+   ───────────────────────────────────────────── */
+
+.btn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  position: relative;
+  overflow: hidden;
+  line-height: 1.4;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ── Primary ─────────────────────────────────── */
+.btnPrimary {
+  background: var(--color-primary-700);
+  color: #fff;
+  border-color: var(--color-primary-700);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+.btnPrimary:active:not(:disabled) {
+  background: var(--color-primary-800);
+  border-color: var(--color-primary-800);
+}
+
+/* ── Secondary ───────────────────────────────── */
+.btnSecondary {
+  background: transparent;
+  color: var(--color-primary-700);
+  border-color: var(--color-neutral-200);
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-200);
+}
+
+.btnSecondary:active:not(:disabled) {
+  background: var(--color-primary-100);
+}
+
+/* ── Danger ──────────────────────────────────── */
+.btnDanger {
+  background: var(--color-semantic-error);
+  color: #fff;
+  border-color: var(--color-semantic-error);
+}
+
+.btnDanger:hover:not(:disabled) {
+  background: #c23333;
+  border-color: #c23333;
+}
+
+.btnDanger:active:not(:disabled) {
+  background: #8a1a1a;
+  border-color: #8a1a1a;
+}
+
+/* ── Ghost ───────────────────────────────────── */
+.btnGhost {
+  background: transparent;
+  color: var(--color-primary-700);
+  border-color: transparent;
+}
+
+.btnGhost:hover:not(:disabled) {
+  background: var(--color-primary-50);
+}
+
+.btnGhost:active:not(:disabled) {
+  background: var(--color-primary-100);
+}
+
+/* ── Sizes ───────────────────────────────────── */
+.btnSm {
+  padding: 6px 12px;
+  font-size: 12px;
+  gap: 4px;
+}
+
+.btnLg {
+  padding: 12px 24px;
+  font-size: 16px;
+  gap: 10px;
+}
+
+/* ── Loading state ───────────────────────────── */
+.btnLoading {
+  pointer-events: none;
+  position: relative;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: btnSpin 0.8s linear infinite;
+}
+
+.btnSm .spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.btnLg .spinner {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Focus visible ───────────────────────────── */
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

@@ -1,0 +1,147 @@
+/* ─────────────────────────────────────────────
+   DoctorSewa v2 — Input Component Styles
+   ───────────────────────────────────────────── */
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.required {
+  color: var(--color-semantic-error);
+  margin-left: 2px;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ── Focus state ─────────────────────────────── */
+.input:focus {
+  border-color: var(--color-primary-700);
+  box-shadow: var(--shadow-focus);
+}
+
+/* ── Disabled ────────────────────────────────── */
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-surface);
+}
+
+/* ── Error state ─────────────────────────────── */
+.inputError {
+  border-color: var(--color-semantic-error);
+}
+
+.inputError:focus {
+  border-color: var(--color-semantic-error);
+  box-shadow: 0 0 0 3px rgba(160, 32, 32, 0.1);
+}
+
+/* ── Success state ───────────────────────────── */
+.inputSuccess {
+  border-color: var(--color-semantic-success);
+}
+
+.inputSuccess:focus {
+  border-color: var(--color-semantic-success);
+  box-shadow: 0 0 0 3px rgba(45, 153, 102, 0.1);
+}
+
+/* ── Helper / error text ─────────────────────── */
+.helperText {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.errorText {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-semantic-error);
+  margin: 0;
+}
+
+.successText {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-semantic-success);
+  margin: 0;
+}
+
+/* ── Password toggle ─────────────────────────── */
+.inputWithToggle {
+  padding-right: 40px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+}
+
+.passwordToggle:hover {
+  color: var(--text-secondary);
+}
+
+.passwordToggle:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 1px;
+}
+
+/* ── Shake animation for error ───────────────── */
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px); }
+  30% { transform: translateX(6px); }
+  50% { transform: translateX(-3px); }
+  70% { transform: translateX(3px); }
+  85% { transform: translateX(-1px); }
+}
+
+.shake {
+  animation: inputShake 0.3s ease-in-out;
+}

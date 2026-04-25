@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
+import { animations } from "@/lib/animations";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,13 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      animations.fadeIn(contentRef.current);
+    }
+  }, []);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -63,8 +71,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
 
-        {/* Page Content */}
-        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+        {/* Page Content — animated */}
+        <div ref={contentRef} className="p-4 sm:p-6 lg:p-8" style={{ opacity: 0 }}>
+          {children}
+        </div>
       </main>
     </div>
   );

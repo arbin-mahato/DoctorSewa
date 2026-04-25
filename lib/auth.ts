@@ -26,7 +26,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           throw new Error("Email and password are required");
         }
 
-        const email = credentials.email as string;
+        const email = (credentials.email as string).toLowerCase().trim();
         const password = credentials.password as string;
 
         const user = await prisma.user.findUnique({
@@ -35,6 +35,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!user || !user.password) {
           throw new Error("Invalid email or password");
+        }
+
+        // Check email verification
+        if (!user.emailVerified) {
+          throw new Error("UNVERIFIED_EMAIL");
         }
 
         // Dynamic import to keep bcryptjs out of edge runtime

@@ -1,12 +1,30 @@
+'use client';
+
+import { useRef, useEffect } from 'react';
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { animations } from "@/lib/animations";
 
 export default function HomePage() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (heroRef.current) animations.slideUp(heroRef.current);
+    if (statsRef.current) animations.staggerChildren(statsRef.current, 0.08);
+    if (stepsRef.current) animations.staggerChildren(stepsRef.current, 0.1);
+    if (ctaRef.current) animations.fadeIn(ctaRef.current, 0.2);
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div ref={heroRef} className="text-center" style={{ opacity: 0 }}>
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-sm text-emerald-700">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -25,17 +43,15 @@ export default function HomePage() {
 
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link
-                href="/symptoms"
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-600/30"
-              >
-                🤖 Check Symptoms with AI
+              <Link href="/symptoms">
+                <Button variant="primary" size="lg">
+                  🤖 Check Symptoms with AI
+                </Button>
               </Link>
-              <Link
-                href="/doctors"
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-8 py-4 text-base font-semibold text-gray-700 transition-all hover:bg-gray-50"
-              >
-                Find a Doctor →
+              <Link href="/doctors">
+                <Button variant="secondary" size="lg">
+                  Find a Doctor →
+                </Button>
               </Link>
             </div>
           </div>
@@ -48,14 +64,17 @@ export default function HomePage() {
 
       {/* Stats Section */}
       <section className="border-y border-gray-200 bg-white py-12">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div
+          ref={statsRef}
+          className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:px-8"
+        >
           {[
             { value: "500+", label: "Verified Doctors" },
             { value: "25+", label: "Specialties" },
             { value: "10K+", label: "Appointments Booked" },
             { value: "4.8★", label: "Average Rating" },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
+            <div key={stat.label} className="text-center" style={{ opacity: 0 }}>
               <div className="text-3xl font-bold text-gray-900">
                 {stat.value}
               </div>
@@ -77,7 +96,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
+          <div ref={stepsRef} className="mt-16 grid gap-8 md:grid-cols-3">
             {[
               {
                 step: "01",
@@ -98,10 +117,7 @@ export default function HomePage() {
                 desc: "Join a video call with your doctor, get prescriptions digitally, and follow up via chat for 7 days — free.",
               },
             ].map((item) => (
-              <div
-                key={item.step}
-                className="relative rounded-2xl border border-gray-200 bg-white p-8 transition-shadow hover:shadow-lg"
-              >
+              <Card key={item.step} variant="default" padding="lg">
                 <span className="absolute -top-3 right-6 rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white">
                   {item.step}
                 </span>
@@ -112,7 +128,7 @@ export default function HomePage() {
                 <p className="text-sm leading-relaxed text-gray-600">
                   {item.desc}
                 </p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -120,7 +136,11 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="bg-emerald-600 py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+        <div
+          ref={ctaRef}
+          className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8"
+          style={{ opacity: 0 }}
+        >
           <h2 className="text-3xl font-bold text-white">
             Ready to take control of your health?
           </h2>
@@ -128,17 +148,15 @@ export default function HomePage() {
             Join thousands of patients and doctors on DoctorSewa
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/auth/signup"
-              className="inline-flex rounded-xl bg-white px-8 py-4 text-base font-semibold text-emerald-700 shadow-lg transition-all hover:bg-emerald-50"
-            >
-              Get Started — It&apos;s Free
+            <Link href="/auth/signup">
+              <Button variant="secondary" size="lg">
+                Get Started — It&apos;s Free
+              </Button>
             </Link>
-            <Link
-              href="/auth/signup"
-              className="inline-flex rounded-xl border border-emerald-400 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-emerald-700"
-            >
-              Register as Doctor
+            <Link href="/auth/signup">
+              <Button variant="ghost" size="lg">
+                Register as Doctor
+              </Button>
             </Link>
           </div>
         </div>

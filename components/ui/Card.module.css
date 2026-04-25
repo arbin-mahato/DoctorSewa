@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────
+   DoctorSewa v2 — Card Component Styles
+   ───────────────────────────────────────────── */
+
+.card {
+  background: var(--bg-page);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* ── Default variant (subtle hover) ──────────── */
+.cardDefault:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Elevated variant (already elevated) ─────── */
+.cardElevated {
+  box-shadow: var(--shadow-md);
+  border-color: transparent;
+}
+
+.cardElevated:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ── No-hover variant (static cards) ─────────── */
+.cardStatic:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.cardElevated.cardStatic:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
